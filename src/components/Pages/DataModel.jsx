@@ -8,52 +8,13 @@ import {
   TableHeader,
   TableBody,
   TableCell,
+  Pagination,
   Modal,
   TextInput,
 } from 'carbon-components-react';
+import { mockData } from '../../MOCK_DATA';
 
-const initialRows = [
-  {
-    id: 'load-balancer-1',
-    name: 'Load Balancer 1',
-    rule: 'Round robin',
-    status: 'Starting',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-2',
-    name: 'Load Balancer 2',
-    rule: 'DNS delegation',
-    status: 'Active',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-3',
-    name: 'Load Balancer 3',
-    rule: 'Round robin',
-    status: 'Disabled',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-4',
-    name: 'Load Balancer 4',
-    rule: 'Round robin',
-    status: 'Disabled',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-5',
-    name: 'Load Balancer 5',
-    rule: 'Round robin',
-    status: 'Disabled',
-    other: 'Test',
-    example: '22',
-  },
-];
+const initialRows = mockData;
 
 const headers = [
   { key: 'name', header: 'Name' },
@@ -63,8 +24,10 @@ const headers = [
   { key: 'example', header: 'Example' },
 ];
 
-const DataTableComponent = () => {
+const DataModel = () => {
   const [rows, setRows] = useState(initialRows);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [sortDirection, setSortDirection] = useState('ASC');
   const [sortColumn, setSortColumn] = useState('name');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,7 +41,7 @@ const DataTableComponent = () => {
     setSortColumn(headerKey);
   };
 
-  const sortedRows = rows.sort((a, b) => {
+  const sortedRows = [...rows].sort((a, b) => {
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
     if (aValue < bValue) return sortDirection === 'ASC' ? -1 : 1;
@@ -111,10 +74,21 @@ const DataTableComponent = () => {
     handleCloseModal();
   };
 
+  const onPageChange = ({ page, pageSize }) => {
+    setCurrentPage(page);
+    setItemsPerPage(pageSize);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = sortedRows.slice(startIndex, startIndex + itemsPerPage);
+
+  const totalItems = rows.length;
+  const pageSizes = [5, 10, 20, 50];
+
   return (
     <>
       <DataTable
-        rows={sortedRows}
+        rows={currentItems}
         headers={headers}
         render={({
           rows,
@@ -129,6 +103,7 @@ const DataTableComponent = () => {
                 <TableRow>
                   {headers.map((header) => (
                     <TableHeader
+                      key={header.key}
                       {...getHeaderProps({
                         header,
                         isSortable: true,
@@ -162,6 +137,13 @@ const DataTableComponent = () => {
           </TableContainer>
         )}
       />
+      <Pagination
+        totalItems={totalItems}
+        pageSize={itemsPerPage}
+        pageSizes={pageSizes} // Allow standard page sizes
+        page={currentPage}
+        onChange={onPageChange}
+      />
       <Modal
         open={isModalOpen}
         onRequestClose={handleCloseModal}
@@ -183,4 +165,4 @@ const DataTableComponent = () => {
   );
 };
 
-export default DataTableComponent;
+export default DataModel;
