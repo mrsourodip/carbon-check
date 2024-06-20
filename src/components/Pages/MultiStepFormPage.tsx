@@ -3,7 +3,6 @@ import {
   Form,
   ProgressIndicator,
   ProgressStep,
-  TextInput,
 } from '@carbon/react';
 import { useNavigate } from 'react-router-dom';
 import DataTableComponent from './DataModel';
@@ -19,7 +18,7 @@ const MultiStepFormPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    if (currentStep < 4) {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
       navigate('/');
@@ -49,29 +48,29 @@ const MultiStepFormPage: React.FC = () => {
 
   return (
     <div
-      className='multi-step-form-page'
+      className="multi-step-form-page"
       style={{ display: 'flex', height: '100vh', padding: '20px', gap: '20px' }}
     >
-      <div className='left-panel'>
+      <div className="left-panel">
         <h1>REGISTER NOW TO LEARN MORE ABOUT IBM CARBON!</h1>
       </div>
-      <div className='right-panel'>
-        <div className='form-container'>
+      <div className="right-panel">
+        <div className="form-container">
           <h2>Multi-Step Form With Progress Indicator</h2>
           <ProgressIndicator currentIndex={currentStep}>
-            <ProgressStep label='Step 1' description='Personal Info' />
-            <ProgressStep label='Step 2' description='Upload File' />
-            <ProgressStep label='Step 3' description='Review' />
-            <ProgressStep label='Step 4' description='Data Table' />
+            <ProgressStep label="Step 1" description="Personal Info" />
+            <ProgressStep label="Step 2" description="Upload File" />
+            <ProgressStep label="Step 3" description="Tree Nodes" />
+            <ProgressStep label="Step 4" description="Data Table" />
           </ProgressIndicator>
           {currentStep === 0 && (
             <Form>
               <DatePickerComponent />
-              <div className='button-group'>
-                <Button kind='secondary' onClick={handlePrev}>
+              <div className="button-group">
+                <Button kind="secondary" onClick={handlePrev}>
                   Back
                 </Button>
-                <Button kind='primary' onClick={handleNext}>
+                <Button kind="primary" onClick={handleNext}>
                   Next
                 </Button>
               </div>
@@ -80,11 +79,11 @@ const MultiStepFormPage: React.FC = () => {
           {currentStep === 1 && (
             <Form>
               <UploadFile />
-              <div className='button-group'>
-                <Button kind='secondary' onClick={handlePrev}>
+              <div className="button-group">
+                <Button kind="secondary" onClick={handlePrev}>
                   Back
                 </Button>
-                <Button kind='primary' onClick={handleNext}>
+                <Button kind="primary" onClick={handleNext}>
                   Next
                 </Button>
               </div>
@@ -98,11 +97,11 @@ const MultiStepFormPage: React.FC = () => {
                 toggleNode3Expansion={toggleNode3Expansion}
                 isNode3Expanded={isNode3Expanded}
               />
-              <div className='button-group'>
-                <Button kind='secondary' onClick={handlePrev}>
+              <div className="button-group">
+                <Button kind="secondary" onClick={handlePrev}>
                   Back
                 </Button>
-                <Button kind='primary' onClick={handleNext}>
+                <Button kind="primary" onClick={handleNext}>
                   Next
                 </Button>
               </div>
@@ -111,12 +110,12 @@ const MultiStepFormPage: React.FC = () => {
           {currentStep === 3 && (
             <Form>
               <DataTableComponent />
-              <div className='button-group'>
-                <Button kind='secondary' onClick={handlePrev}>
+              <div className="button-group">
+                <Button kind="secondary" onClick={handlePrev}>
                   Back
                 </Button>
-                <Button kind='primary' onClick={handleNext}>
-                  Next
+                <Button kind="primary" onClick={handleNext}>
+                  Submit
                 </Button>
               </div>
             </Form>

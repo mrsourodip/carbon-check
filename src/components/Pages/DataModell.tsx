@@ -8,9 +8,11 @@ import {
   TableHeader,
   TableBody,
   TableCell,
+  Pagination,
   Modal,
   TextInput,
-} from 'carbon-components-react';
+  MultiSelect,
+} from '@carbon/react';
 
 type RowType = {
   id: string;
@@ -22,49 +24,14 @@ type RowType = {
 };
 
 const initialRows: RowType[] = [
-  {
-    id: 'load-balancer-1',
-    name: 'Load Balancer 1',
-    rule: 'Round robin',
-    status: 'Starting',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-2',
-    name: 'Load Balancer 2',
-    rule: 'DNS delegation',
-    status: 'Active',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-3',
-    name: 'Load Balancer 3',
-    rule: 'Round robin',
-    status: 'Disabled',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-4',
-    name: 'Load Balancer 4',
-    rule: 'Round robin',
-    status: 'Disabled',
-    other: 'Test',
-    example: '22',
-  },
-  {
-    id: 'load-balancer-5',
-    name: 'Load Balancer 5',
-    rule: 'Round robin',
-    status: 'Disabled',
-    other: 'Test',
-    example: '22',
-  },
+  { id: 'load-balancer-1', name: 'Cerro Largo International Airport', rule: 'UY-CL', status: 'SA', other: 'UY', example: 'SUMO' },
+  { id: 'load-balancer-2', name: 'Chesterfield Inlet Airport', rule: 'CA-NU', status: 'NA', other: 'CA', example: 'CYCS' },
+  { id: 'load-balancer-3', name: 'Chevak Airport', rule: 'US-AK', status: 'NA', other: 'US', example: 'PAVA' },
+  { id: 'load-balancer-4', name: 'Chitral Airport', rule: 'PK-NW', status: 'AS', other: 'PK', example: 'OPCH' },
+  { id: 'load-balancer-5', name: 'Christchurch International Airport', rule: 'NZ-CAN', status: 'OC', other: 'NZ', example: 'NZCH' },
 ];
 
-const headers: { key: keyof RowType; header: string }[] = [
+const headers = [
   { key: 'name', header: 'Name' },
   { key: 'rule', header: 'Rule' },
   { key: 'status', header: 'Status' },
@@ -72,7 +39,14 @@ const headers: { key: keyof RowType; header: string }[] = [
   { key: 'example', header: 'Example' },
 ];
 
-const DataTableComponent: React.FC = () => {
+const statusOptions = [
+  { id: 'SA', text: 'SA' },
+  { id: 'NA', text: 'NA' },
+  { id: 'AS', text: 'AS' },
+  { id: 'OC', text: 'OC' },
+];
+
+const DataModel: React.FC = () => {
   const [rows, setRows] = useState<RowType[]>(initialRows);
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
   const [sortColumn, setSortColumn] = useState<keyof RowType>('name');
@@ -80,6 +54,9 @@ const DataTableComponent: React.FC = () => {
   const [editRow, setEditRow] = useState<RowType | null>(null);
   const [editField, setEditField] = useState<keyof RowType>('name');
   const [editValue, setEditValue] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const handleSort = (headerKey: keyof RowType) => {
     const isAsc = sortColumn === headerKey && sortDirection === 'ASC';
@@ -87,7 +64,7 @@ const DataTableComponent: React.FC = () => {
     setSortColumn(headerKey);
   };
 
-  const sortedRows = [...rows].sort((a, b) => {
+  const sortedRows = rows.sort((a, b) => {
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
     if (aValue < bValue) return sortDirection === 'ASC' ? -1 : 1;
@@ -111,92 +88,119 @@ const DataTableComponent: React.FC = () => {
 
   const handleSave = () => {
     if (editRow) {
-      const updatedRows = rows.map((row) => {
-        if (row.id === editRow.id) {
-          return { ...row, [editField]: editValue };
-        }
-        return row;
-      });
+      const updatedRows = rows.map((row) =>
+        row.id === editRow.id ? { ...row, [editField]: editValue } : row
+      );
       setRows(updatedRows);
     }
     handleCloseModal();
   };
 
+  const onPageChange = (paginationProps: any) => {
+    setCurrentPage(paginationProps.page);
+    setItemsPerPage(paginationProps.pageSize);
+  };
+
+  const handleMultiSelectChange = ({ selectedItems }: { selectedItems: { id: string }[] | null }) => {
+    if (selectedItems) {
+      setSelectedCategories(selectedItems.map(item => item.id));
+    }
+  };
+
+  const filteredRows = rows.filter((row) =>
+    selectedCategories.length === 0 || selectedCategories.includes(row.status)
+  );
+
+  const currentItems = filteredRows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalItems = filteredRows.length;
+  const pageSizes = [5, 10, 20, 50];
+
   return (
     <>
-      {/* <DataTable
-    rows={sortedRows}
-    headers={headers}
-    render={({
-     rows,
-     headers,
-     getHeaderProps,
-     getRowProps,
-     getTableProps,
-    }) => (
-     <TableContainer title='Load Balancers'>
-      <Table {...getTableProps()}>
-       <TableHead>
-        <TableRow>
-         {headers.map((header) => (
-          <TableHeader
-           {...getHeaderProps({
-            header,
-            isSortable: true,
-            onClick: () => handleSort(header.key),
-            sortDirection:
-             header.key === sortColumn ? sortDirection : 'NONE',
-           })}
-           key={header.key}
-          >
-           {header.header}
-          </TableHeader>
-         ))}
-        </TableRow>
-       </TableHead>
-       <TableBody>
-        {rows.map((row) => (
-         <TableRow key={row.id} {...getRowProps({ row })}>
-          {row.cells.map((cell) => (
-           <TableCell
-            key={cell.id}
-            onClick={() =>
-             handleOpenModal(
-              row,
-              cell.info.header as keyof RowType,
-              cell.value as string
-             )
-            }
-           >
-            {cell.value}
-           </TableCell>
-          ))}
-         </TableRow>
-        ))}
-       </TableBody>
-      </Table>
-     </TableContainer>
-    )}
-   />
-   <Modal
-    open={isModalOpen}
-    onRequestClose={handleCloseModal}
-    modalHeading='Edit Field'
-    primaryButtonText='Save'
-    secondaryButtonText='Cancel'
-    onSecondarySubmit={handleCloseModal}
-    onRequestSubmit={handleSave}
-    size='sm'
-   >
-    <TextInput
-     id='edit-field'
-     labelText={`Edit ${editField}`}
-     value={editValue}
-     onChange={(e) => setEditValue(e.target.value)}
-    />
-   </Modal> */}
+      {/* <div style={{ marginBottom: '1rem' }}>
+        <MultiSelect
+          id="status-filter"
+          titleText="Filter by Status"
+          items={statusOptions}
+          itemToString={(item:any) => (item ? item.text : '')}
+          onChange={handleMultiSelectChange}
+          label="Statuses"
+          translateWithId={(id) => {
+            if (id === 'open.menu') return 'Open menu';
+            if (id === 'clear.all') return 'Clear all';
+            return '';
+          }}
+        />
+      </div>
+      <DataTable rows={currentItems} headers={headers}>
+        {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
+          <TableContainer title="Load Balancers">
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  {headers.map((header) => (
+                    <TableHeader
+                      {...getHeaderProps({
+                        header,
+                        isSortable: true,
+                        onClick: () => handleSort(header.key as keyof RowType),
+                        sortDirection: header.key === sortColumn ? sortDirection : 'NONE',
+                      })}
+                      key={header.key}
+                    >
+                      {header.header}
+                    </TableHeader>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <TableRow key={row.id} {...getRowProps({ row })}>
+                    {row.cells.map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        onClick={() => handleOpenModal(row as unknown as RowType, cell.info.header as keyof RowType, cell.value)}
+                      >
+                        {cell.value}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </DataTable>
+      <Pagination
+        page={currentPage}
+        pageSize={itemsPerPage}
+        pageSizes={pageSizes}
+        totalItems={totalItems}
+        onChange={onPageChange}
+      />
+      <Modal
+        open={isModalOpen}
+        onRequestClose={handleCloseModal}
+        modalHeading="Edit Field"
+        primaryButtonText="Save"
+        secondaryButtonText="Cancel"
+        onSecondarySubmit={handleCloseModal}
+        onRequestSubmit={handleSave}
+        size="sm"
+      >
+        <TextInput
+          id="edit-field"
+          labelText={`Edit ${editField}`}
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+        />
+      </Modal> */}
     </>
   );
 };
 
-export default DataTableComponent;
+export default DataModel;

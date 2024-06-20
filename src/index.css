@@ -21,109 +21,80 @@ div {
   box-sizing: border-box;
 }
 
-.left-panel {
-  flex: 1;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-.right-panel {
-  flex: 1;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-.content-box {
-  border: 1px solid #e0e0e0;
+.header {
   padding: 20px;
-  margin-bottom: 20px;
-  width: 100%;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  font-size: 1em;
+  margin-bottom: 20px;
 }
 
-.button-group {
+.main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.filter-panel {
+  flex: 0 0 300px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: none;
+  flex-direction: column;
+  position: relative;
+}
+
+.filter-panel.open {
+  display: flex;
+}
+
+.filter-option {
+  margin-bottom: 20px;
+}
+
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dropdown .filter-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 10;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.filter-dropdown:hover .filter-options {
+  display: block;
+}
+
+.filter-actions {
   display: flex;
   justify-content: space-between;
-  width: 100%;
 }
 
-.button-group a {
-  text-decoration: none;
-}
-
-.button-group button {
-  margin: 0 10px;
-}
-
-.form-container {
-  border: 1px solid #e0e0e0;
+.data-table-container {
+  flex: 1;
   padding: 20px;
-  width: 100%;
-  max-width: 600px;
   background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-}
-
-.form-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
-
-.form-container form .bx--text-input {
-  width: 100%;
-}
-
-.button-group {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Specific styles for WelcomePage */
-.welcome-page h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-  color: #0072c3;
-}
-
-.welcome-page p {
-  font-size: 1.5em;
-  color: #4a4a4a;
-}
-
-/* Specific styles for RegisterPage */
-.register-page h1 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  color: #0072c3;
-}
-
-.register-page .form-container h2 {
-  margin-bottom: 20px;
-  color: #0072c3;
 }
 
 .bx--text-input {
   border-radius: 4px;
-  width: 100%; /* Set the width as needed */
-  padding: 10px; /* Adjust padding for better spacing */
-  border: 1px solid #e0e0e0; /* Border color similar to Carbon */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow similar to Carbon Design System */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .bx--form-item {
