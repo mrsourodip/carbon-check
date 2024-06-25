@@ -4,6 +4,8 @@ import WelcomePage from './components/Pages/WelcomePage';
 import RegisterPage from './components/Pages/RegisterPage';
 import MultiStepFormPage from './components/Pages/MultiStepFormPage';
 import DataTables from './components/DataTable/DataTable';
+import FinalComponent from './components/Tree/Final';
+import ToggleControlComponent from './components/Tree/DataTableComponent';
 
 const App: React.FC = () => {
   return (
@@ -13,6 +15,7 @@ const App: React.FC = () => {
         <Route path='/register' Component={RegisterPage} />
         <Route path='/multi-step' Component={MultiStepFormPage} />
         <Route path='/data-table' Component={DataTables} />
+        <Route path='/toggle-view' Component={ToggleControlComponent} />
       </Routes>
     </Router>
   );

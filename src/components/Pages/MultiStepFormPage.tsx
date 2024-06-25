@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import {
-  Form,
-  ProgressIndicator,
-  ProgressStep,
-} from '@carbon/react';
+import { Form, ProgressIndicator, ProgressStep } from '@carbon/react';
 import { useNavigate } from 'react-router-dom';
-import DataTableComponent from './DataModel';
 import Button from '../Button/Button';
 import DatePickerComponent from '../DatePickerForm/DatePickerForm';
 import UploadFile from '../UploadFile/FileUploader';
-import TreeNodeComponent from '../Tree/TreeNodeComponent';
+import TreeNodeComponent from '../Tree/DataTableComponent';
 
 const MultiStepFormPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -92,10 +87,6 @@ const MultiStepFormPage: React.FC = () => {
           {currentStep === 2 && (
             <Form>
               <TreeNodeComponent
-                selectedNodes={selectedNodes}
-                handleSelect={handleSelect}
-                toggleNode3Expansion={toggleNode3Expansion}
-                isNode3Expanded={isNode3Expanded}
               />
               <div className="button-group">
                 <Button kind="secondary" onClick={handlePrev}>
@@ -103,19 +94,6 @@ const MultiStepFormPage: React.FC = () => {
                 </Button>
                 <Button kind="primary" onClick={handleNext}>
                   Next
-                </Button>
-              </div>
-            </Form>
-          )}
-          {currentStep === 3 && (
-            <Form>
-              <DataTableComponent />
-              <div className="button-group">
-                <Button kind="secondary" onClick={handlePrev}>
-                  Back
-                </Button>
-                <Button kind="primary" onClick={handleNext}>
-                  Submit
                 </Button>
               </div>
             </Form>
