@@ -111,6 +111,25 @@ const flattenData = (nodes: TreeNodeData[]): TreeNodeData[] => {
   return flatList;
 };
 
+const findParentNodes = (nodes: TreeNodeData[], targetId: string): string[] => {
+  let parents: string[] = [];
+
+  const traverse = (node: TreeNodeData, currentPath: string[]) => {
+    if (node.id === targetId) {
+      parents = currentPath;
+      return;
+    }
+    if (node.children) {
+      for (let child of node.children) {
+        traverse(child, [...currentPath, node.id]);
+      }
+    }
+  };
+
+  nodes.forEach((node) => traverse(node, []));
+  return parents;
+};
+
 const ToggleControlComponent: React.FC = () => {
   const [isTreeView, setIsTreeView] = useState(true);
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
@@ -121,7 +140,20 @@ const ToggleControlComponent: React.FC = () => {
   });
 
   const handleSelect = (event: { id: string }) => {
-    setSelectedNodes([event.id]);
+    const selectedId = event.id;
+    setSelectedNodes([selectedId]);
+
+    // Find and expand parent nodes if any
+    const parentNodes = findParentNodes(data, selectedId);
+    if (parentNodes.length > 0) {
+      setExpandedNodes((prev) => {
+        const updatedExpandedNodes = { ...prev };
+        parentNodes.forEach((id) => {
+          updatedExpandedNodes[id] = true;
+        });
+        return updatedExpandedNodes;
+      });
+    }
   };
 
   const handleToggle = (id: string) => {
