@@ -13,7 +13,8 @@ import {
   Grid,
   Column,
 } from '@carbon/react';
-import { List, TreeViewAlt, Document } from '@carbon/icons-react';
+import { List, TreeViewAlt, Document, Edit, Delete } from '@carbon/icons-react';
+import './Toggler.css'
 
 interface TreeNodeData {
   id: string;
@@ -136,9 +137,15 @@ const ToggleControlComponent: React.FC = () => {
         key={node.id}
         id={node.id}
         label={
-          <>
-            <Document /> {node.name}
-          </>
+          <div className="node-container" style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+            <span style={{ flexGrow: 1 }}>
+              <Document /> {node.name}
+            </span>
+            <div className="hover-icons">
+              <Edit />
+              <Delete />
+            </div>
+          </div>
         }
         isSelected={selectedNodes.includes(node.id)}
         isExpanded={expandedNodes[node.id]}
@@ -156,10 +163,19 @@ const ToggleControlComponent: React.FC = () => {
         key={row.id}
         onClick={() => handleSelect({ id: row.id })}
         isSelected={row.id === selectedNodes[0]}
+        className="row-container"
       >
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.path}</TableCell>
-        <TableCell>{row.description}</TableCell>
+        <TableCell>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {row.description}
+            <div className="hover-icons">
+              <Edit />
+              <Delete />
+            </div>
+          </div>
+        </TableCell>
       </TableRow>
     ));
   };

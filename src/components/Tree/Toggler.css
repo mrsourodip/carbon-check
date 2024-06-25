@@ -1,0 +1,11 @@
+.hover-icons {
+  visibility: hidden;
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.node-container:hover .hover-icons,
+.row-container:hover .hover-icons {
+  visibility: visible;
+}

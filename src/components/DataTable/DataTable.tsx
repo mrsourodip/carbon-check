@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Column,
@@ -9,8 +9,9 @@ import {
   TableRow,
   TableBody,
   TableCell,
+  Button,
 } from '@carbon/react';
-import { ChevronDown, ChevronUp } from '@carbon/icons-react';
+import { ChevronDown, ChevronUp, Edit, Delete } from '@carbon/icons-react';
 import './DataTable.css';
 
 interface HeaderData {
@@ -31,6 +32,7 @@ const headerData: HeaderData[] = [
   { header: 'Business Activity Name', key: 'name' },
   { header: 'Tick', key: 'tier' },
   { header: 'Description', key: 'description' },
+  { header: '', key: 'actions' },
 ];
 
 const rowData: RowData[] = [
@@ -89,12 +91,9 @@ const rowData: RowData[] = [
 ];
 
 const DataTables: React.FC = () => {
-  const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>(
-    {}
-  );
-  const [selectedRows, setSelectedRows] = useState<{ [key: number]: boolean }>(
-    {}
-  );
+  const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
+  const [selectedRows, setSelectedRows] = useState<{ [key: number]: boolean }>({});
+  const [indeterminateRows, setIndeterminateRows] = useState<{ [key: number]: boolean }>({});
 
   const toggleRowExpansion = (id: number) => {
     setExpandedRows((prevExpandedRows) => ({
@@ -103,41 +102,52 @@ const DataTables: React.FC = () => {
     }));
   };
 
-  const handleParentCheckboxChange = (id: number, children: RowData[]) => {
+  const updateParentCheckboxState = (parentId: number, children: RowData[]) => {
+    const allSelected = children.every((child) => selectedRows[child.id]);
+    const noneSelected = children.every((child) => !selectedRows[child.id]);
+    const someSelected = children.some((child) => selectedRows[child.id]);
+
+    if (allSelected) {
+      setIndeterminateRows((prev) => ({ ...prev, [parentId]: false }));
+      setSelectedRows((prev) => ({ ...prev, [parentId]: true }));
+    } else if (noneSelected) {
+      setIndeterminateRows((prev) => ({ ...prev, [parentId]: false }));
+      setSelectedRows((prev) => ({ ...prev, [parentId]: false }));
+    } else if (someSelected) {
+      setIndeterminateRows((prev) => ({ ...prev, [parentId]: true }));
+      setSelectedRows((prev) => ({ ...prev, [parentId]: false }));
+    }
+  };
+
+  const handleParentCheckboxChange = (id: number, children: RowData[] = []) => {
     const newSelectedRows = { ...selectedRows, [id]: !selectedRows[id] };
+    const newIndeterminateRows = { ...indeterminateRows, [id]: false };
 
     children.forEach((child) => {
       newSelectedRows[child.id] = !selectedRows[id];
     });
 
     setSelectedRows(newSelectedRows);
+    setIndeterminateRows(newIndeterminateRows);
   };
 
-  const handleChildCheckboxChangeWithParent = (
-    parentId: number,
-    childId: number
-  ) => {
-    const newSelectedRows = {
-      ...selectedRows,
-      [childId]: !selectedRows[childId],
-    };
-
-    if (!newSelectedRows[childId]) {
-      newSelectedRows[parentId] = false;
-    } else {
-      const parent = rowData.find((row) => row.id === parentId);
-      if (parent) {
-        const allSelected = parent.children?.every(
-          (child) => newSelectedRows[child.id]
-        );
-        if (allSelected) {
-          newSelectedRows[parentId] = true;
-        }
-      }
-    }
+  const handleChildCheckboxChangeWithParent = (parentId: number, childId: number) => {
+    const newSelectedRows = { ...selectedRows, [childId]: !selectedRows[childId] };
 
     setSelectedRows(newSelectedRows);
+    const parent = rowData.find((row) => row.id === parentId);
+    if (parent && parent.children) {
+      updateParentCheckboxState(parentId, parent.children);
+    }
   };
+
+  useEffect(() => {
+    rowData.forEach((row) => {
+      if (row.children) {
+        updateParentCheckboxState(row.id, row.children);
+      }
+    });
+  }, [selectedRows]);
 
   const renderNestedRows = (row: RowData) => {
     if (expandedRows[row.id] && row.children) {
@@ -148,14 +158,30 @@ const DataTables: React.FC = () => {
               type='checkbox'
               className='table-checkbox'
               checked={!!selectedRows[child.id]}
-              onChange={() =>
-                handleChildCheckboxChangeWithParent(row.id, child.id)
-              }
+              onChange={() => handleChildCheckboxChangeWithParent(row.id, child.id)}
             />
           </TableCell>
           <TableCell className='table-cell-nested'>{child.name}</TableCell>
           <TableCell className='table-cell'>{child.tier}</TableCell>
           <TableCell className='table-cell'>{child.description}</TableCell>
+          <TableCell className='table-cell-buttons'>
+            <Button
+              hasIconOnly
+              renderIcon={Edit}
+              tooltipAlignment="center"
+              iconDescription="Edit"
+              size="sm"
+              kind="ghost"
+            />
+            <Button
+              hasIconOnly
+              renderIcon={Delete}
+              tooltipAlignment="center"
+              iconDescription="Delete"
+              size="sm"
+              kind="ghost"
+            />
+          </TableCell>
         </TableRow>
       ));
     }
@@ -163,7 +189,7 @@ const DataTables: React.FC = () => {
   };
 
   return (
-    <Grid>
+    <Grid style={{ justifyContent: 'center', alignItems: 'center', minHeight: '100vh', minWidth: '800px' }}>
       <Column lg={16}>
         <div className='header-section'>
           <div className='header-title'>Business Activities</div>
@@ -182,26 +208,44 @@ const DataTables: React.FC = () => {
             <TableBody>
               {rowData.map((row) => (
                 <React.Fragment key={row.id}>
-                  <TableRow
-                    className='table-row'
-                    onClick={() => toggleRowExpansion(row.id)}
-                  >
+                  <TableRow className='table-row'>
                     <TableCell className='table-cell'>
-                      {expandedRows[row.id] ? <ChevronUp /> : <ChevronDown />}
-                      <input
-                        type='checkbox'
-                        className='table-checkbox'
-                        checked={!!selectedRows[row.id]}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          handleParentCheckboxChange(row.id, row.children || []);
-                        }}
-                      />
+                      <div onClick={() => toggleRowExpansion(row.id)} style={{ display: 'flex', alignItems: 'center' }}>
+                        {expandedRows[row.id] ? <ChevronUp /> : <ChevronDown />}
+                        <input
+                          type='checkbox'
+                          className='table-checkbox'
+                          checked={!!selectedRows[row.id]}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleParentCheckboxChange(row.id, row.children || []);
+                          }}
+                          ref={(input) => {
+                            if (input) input.indeterminate = !!indeterminateRows[row.id];
+                          }}
+                        />
+                      </div>
                     </TableCell>
                     <TableCell className='table-cell'>{row.name}</TableCell>
                     <TableCell className='table-cell'>{row.tier}</TableCell>
-                    <TableCell className='table-cell'>
-                      {row.description}
+                    <TableCell className='table-cell'>{row.description}</TableCell>
+                    <TableCell className='table-cell-buttons'>
+                      <Button
+                        hasIconOnly
+                        renderIcon={Edit}
+                        tooltipAlignment="center"
+                        iconDescription="Edit"
+                        size="sm"
+                        kind="ghost"
+                      />
+                      <Button
+                        hasIconOnly
+                        renderIcon={Delete}
+                        tooltipAlignment="center"
+                        iconDescription="Delete"
+                        size="sm"
+                        kind="ghost"
+                      />
                     </TableCell>
                   </TableRow>
                   {renderNestedRows(row)}

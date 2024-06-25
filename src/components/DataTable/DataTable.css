@@ -1,74 +1,36 @@
-/* DataTable.css */
+/* Add a minimum height to the TableContainer */
 .table-container {
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 1400px; /* Adjusted to a larger minimum height */
+}
+
+.header-section {
+  padding: 20px 0;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .table-header {
   background-color: #f4f4f4;
 }
 
-.table-row {
-  cursor: pointer;
-}
-
-.table-row:hover {
-  background-color: #f4f4f4;
-}
-
-.nested-row {
-  background-color: #f9f9f9;
-}
-
-/* .nested-cell {
-  padding-left: 2rem;
-} */
-
-.table-checkbox {
-  margin-right: 1rem;
-}
-
 .table-header-cell {
-  padding: 1rem;
+  font-weight: bold;
+  padding: 16px;
 }
 
 .table-cell {
-  padding: 1rem;
-  vertical-align: middle;
+  padding: 16px;
 }
 
-.action-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+.table-row:hover .table-cell-buttons button,
+.nested-row:hover .table-cell-buttons button {
+  visibility: visible;
 }
 
-.action-button:hover {
-  background-color: #0056b3;
-}
-
-.header-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.header-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.add-activities {
-  display: flex;
-  align-items: center;
-}
-
-.search-box {
-  margin-right: 1rem;
+.table-cell-buttons button {
+  visibility: hidden;
+  margin-left: 5px;
 }
