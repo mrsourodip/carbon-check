@@ -1,0 +1,153 @@
+.edit-risk-dialog {
+  display: flex;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 200px; /* Adjust width to fit the progress indicator */
+  margin-right: 1rem;
+}
+
+.sidebar .bx--btn {
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.sidebar .bx--btn.active {
+  font-weight: normal;
+  background-color: white;
+}
+
+.panel-content {
+  margin-top: 0%;
+  flex-grow: 1;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Adds consistent spacing between elements */
+  padding: 1rem; /* Adds padding around the panel content */
+}
+
+.panel-title {
+  font-size: larger;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-p {
+  font-size: small;
+  margin-bottom: 20px;
+}
+
+.panel h4 {
+  margin-bottom: 0.5rem;
+}
+
+.panel p {
+  margin-bottom: 0.5rem;
+  font-size: small;
+}
+
+.bx--dropdown,
+.bx--text-input,
+.bx--number-input,
+.bx--text-area,
+.bx--date-picker {
+  margin-bottom: 1rem;
+}
+
+.row,
+.drop-down.row,
+.owner-row {
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.drop-down.row.full-width {
+  width: 100%;
+}
+
+.drop-down.row.full-width .bx--dropdown {
+  flex: 1;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin-right: 1rem;
+  font-size: 1.25rem;
+}
+
+.modal-header p {
+  font-size: 0.5rem;
+}
+
+.bx--modal-container {
+  max-width: 800px;
+}
+
+.bx--text-input__field-wrapper,
+.bx--text-area__wrapper,
+.bx--dropdown__wrapper,
+.bx--number__input-wrapper,
+.bx--date-picker__wrapper {
+  font-size: 0.875rem;
+}
+
+.title-sidebar {
+  font-size: large;
+  margin-bottom: 0.5rem;
+}
+
+.row .bx--dropdown {
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.row .bx--dropdown:last-child {
+  margin-right: 0;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.prev-button,
+.next-button {
+  padding: 1rem;
+  margin-top: 20px !important;
+}
+
+#owner + .bx--btn {
+  margin-left: 1rem;
+  width: auto;
+  height: 30px;
+  white-space: nowrap;
+}
+
+#creation-date {
+  margin-top: 1rem;
+}
+
+.description-textarea,
+.impact-textarea {
+  resize: vertical;
+  height: 5rem; /* Adjust height as needed */
+}
+
+.creation-date-text {
+  font-weight: bold;
+  font-size: small;
+}
+
+.advanced-button {
+  color: black;
+  background-color: antiquewhite;
+}

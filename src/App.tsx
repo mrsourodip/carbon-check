@@ -6,6 +6,7 @@ import MultiStepFormPage from './components/Pages/MultiStepFormPage';
 import DataTables from './components/DataTable/DataTable';
 import FinalComponent from './components/Tree/Final';
 import ToggleControlComponent from './components/Tree/DataTableComponent';
+import DataModel from './components/Pages/DataModel';
 
 const App: React.FC = () => {
   return (
@@ -14,7 +15,7 @@ const App: React.FC = () => {
         <Route path='/' Component={WelcomePage} />
         <Route path='/register' Component={RegisterPage} />
         <Route path='/multi-step' Component={MultiStepFormPage} />
-        <Route path='/data-table' Component={DataTables} />
+        <Route path='/data-table' Component={DataModel} />
         <Route path='/toggle-view' Component={ToggleControlComponent} />
       </Routes>
     </Router>

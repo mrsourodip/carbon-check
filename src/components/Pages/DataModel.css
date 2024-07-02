@@ -1,0 +1,198 @@
+/* DataTable.css */
+
+/* Filter Sidebar */
+.filter-sidebar {
+  background-color: #f4f4f4;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 320px;
+  z-index: 1000;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.close-button {
+  align-self: flex-end;
+  margin-bottom: 20px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.filter-options {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-options label {
+  margin-bottom: 5px;
+}
+
+.apply-filters-container {
+  margin-top: auto;
+}
+
+.apply-filters-button {
+  width: 100%;
+}
+
+/* Main Content */
+.main-content {
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.main-content.full-width {
+  margin-left: 0;
+}
+
+.main-content.shift-right {
+  margin-left: 340px;
+}
+
+.table-title {
+  margin-bottom: 20px;
+}
+
+.filters-and-textbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-button-secondary {
+  margin-right: 20px;
+  background-color: lightgray;
+  color: black;
+}
+
+.selected-filters-pill {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 2px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.selected-filters-pill:hover {
+  background-color: #f1f1f1;
+}
+
+.selected-filters-text {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.clear-filters-text {
+  color: #0f62fe;
+  cursor: pointer;
+}
+
+.clear-filters-text:hover {
+  text-decoration: none;
+}
+
+.search-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.refresh-icon {
+  cursor: pointer;
+  margin-right: 20px;
+  background-color: whitesmoke;
+  color: black;
+}
+
+.level-flag {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+th.is-sortable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+th.is-sortable .sort-arrow {
+  margin-left: 5px;
+}
+
+.icon {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Styles for the level icon */
+.level-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.level-low {
+  fill: blue;
+}
+
+.level-medium {
+  fill: orange;
+}
+
+.level-high {
+  fill: red;
+}
+
+.icon-cell {
+  position: relative;
+  width: 60px; /* Adjust as needed */
+}
+
+.action-icon {
+  visibility: hidden;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.edit-icon {
+  color: #007d79; /* Example color for edit icon */
+}
+
+.delete-icon {
+  color: #da1e28; /* Example color for delete icon */
+}
+
+.table-row:hover .action-icon {
+  visibility: visible;
+}
